@@ -2,7 +2,7 @@
 
 # 用户：Ejemplarr
 # 编写时间:2022/3/24 22:10
-from train import device
+from train_1 import device
 from data_preparation import data_start, data_prediction_to_f_and_t, dataset_split_4sets, lengths, targets
 from GRU import GRU
 from LSTM import LSTM
