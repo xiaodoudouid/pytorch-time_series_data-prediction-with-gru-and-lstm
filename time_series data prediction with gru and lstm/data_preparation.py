@@ -6,6 +6,7 @@
 # 用户：Ejemplarr
 # 编写时间:2022/3/24 22:11
 from torch.utils.data import Dataset, DataLoader
+from sklearn.preprocessing import MinMaxScaler#NEW
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
@@ -22,7 +23,15 @@ def data_start():
     T = 1000
     x = torch.arange(1, T + 1, dtype=torch.float32)
     y = torch.sin(0.01 * x) + torch.normal(0, 0.1, (T,))  # 每个y加上一个0到0.2(左闭右开)的噪声
-    return x, y
+    # === 新增优化：归一化 ===
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    y_numpy = y.numpy().reshape(-1, 1)  # 转换为 (1000, 1)
+    y_scaled = scaler.fit_transform(y_numpy)  # 归一化到 0-1
+    y = torch.from_numpy(y_scaled).flatten()  # 转回 tensor 且 展平
+    # =====================
+    return x, y,scaler
+
+#data_prediction模块
 
 def data_prediction_to_f_and_t(data, num_features, num_targets):
     '''
